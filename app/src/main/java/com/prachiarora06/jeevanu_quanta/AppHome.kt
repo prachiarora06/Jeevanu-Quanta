@@ -7,7 +7,10 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.MoreVert
@@ -27,8 +30,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -42,7 +49,7 @@ fun AppHome() {
     val imgPicker = rememberLauncherForActivityResult(
         ActivityResultContracts.PickVisualMedia()
     ) { uri ->
-        if(uri != null) {
+        if (uri != null) {
             imgUri = uri
             appState = AppState.IMAGE_SELECTED
         }
@@ -101,20 +108,25 @@ fun AppHome() {
             }
 
             AppState.IMAGE_SELECTED -> {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center,
+                LazyColumn(
                     modifier = Modifier
-                        .fillMaxSize()
                         .padding(innerPadding)
+                        .fillMaxSize()
                 ) {
-                    Text(
-                        "Image Selected",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 20.sp,
-                    )
+                    item {
+                        AsyncImage(
+                            model = imgUri,
+                            contentDescription = "Selected Image",
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(28.dp)
+                                .clip(RoundedCornerShape(28.dp))
+                        )
+                    }
                 }
             }
+
             AppState.RESULT_COMPUTED -> {}
         }
     }
