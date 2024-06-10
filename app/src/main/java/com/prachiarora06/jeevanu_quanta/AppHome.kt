@@ -1,5 +1,7 @@
 package com.prachiarora06.jeevanu_quanta
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -15,11 +17,21 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppHome() {
+    var appState by remember {
+        mutableStateOf(AppState.IMAGE_NOT_SELECTED)
+    }
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(onClick = { /*TODO*/ }) {
@@ -40,16 +52,34 @@ fun AppHome() {
                 },
                 actions = {
                     IconButton(onClick = { /*TODO*/ }) {
-                        Icon(Icons.Filled.MoreVert,
-                            contentDescription = "Menu")
+                        Icon(
+                            Icons.Filled.MoreVert,
+                            contentDescription = "Menu"
+                        )
                     }
                 })
         },
         modifier = Modifier.fillMaxSize()
     ) { innerPadding ->
-        Text(
-            "Hello World!",
-            modifier = Modifier.padding(innerPadding)
-        )
+        when (appState) {
+            AppState.IMAGE_NOT_SELECTED -> {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding)
+                ) {
+                    Text(
+                        "Select an Image",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 20.sp,
+                    )
+                }
+            }
+
+            AppState.IMAGE_SELECTED -> {}
+            AppState.RESULT_COMPUTED -> {}
+        }
     }
 }
