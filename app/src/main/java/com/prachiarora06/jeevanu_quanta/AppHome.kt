@@ -20,11 +20,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -53,6 +55,12 @@ fun AppHome() {
             imgUri = uri
             appState = AppState.IMAGE_SELECTED
         }
+    }
+    var threshold by remember {
+        mutableFloatStateOf(185f)
+    }
+    var areaThreshold by remember {
+        mutableFloatStateOf(20f)
     }
 
     Scaffold(
@@ -123,6 +131,37 @@ fun AppHome() {
                                 .padding(28.dp)
                                 .clip(RoundedCornerShape(28.dp))
                         )
+                    }
+                    item {
+                        Column(modifier = Modifier.padding(8.dp)) {
+                            Text(
+                                "Threshold",
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier
+                                    .padding(start = 8.dp)
+                            )
+                            Slider(
+                                value = threshold,
+                                onValueChange = { threshold = it },
+                                valueRange = 0f..255f
+                            )
+                        }
+                    }
+                    item {
+                        Column(modifier = Modifier.padding(8.dp)) {
+                            Text(
+                                "Colony Size",
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier
+                                    .padding(start = 8.dp)
+                            )
+                            Slider(
+                                value = areaThreshold,
+                                onValueChange = { areaThreshold = it },
+                                valueRange = 0f..100f
+                            )
+
+                        }
                     }
                 }
             }
