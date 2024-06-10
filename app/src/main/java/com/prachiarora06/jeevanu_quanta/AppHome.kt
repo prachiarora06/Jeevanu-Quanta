@@ -59,7 +59,7 @@ fun AppHome() {
     var threshold by remember {
         mutableFloatStateOf(185f)
     }
-    var areaThreshold by remember {
+    var colonySize by remember {
         mutableFloatStateOf(20f)
     }
 
@@ -133,40 +133,50 @@ fun AppHome() {
                         )
                     }
                     item {
-                        Column(modifier = Modifier.padding(8.dp)) {
-                            Text(
-                                "Threshold",
-                                fontWeight = FontWeight.Bold,
-                                modifier = Modifier
-                                    .padding(start = 8.dp)
-                            )
-                            Slider(
-                                value = threshold,
-                                onValueChange = { threshold = it },
-                                valueRange = 0f..255f
-                            )
-                        }
+                        ThresholdSlider(threshold) {threshold = it}
                     }
                     item {
-                        Column(modifier = Modifier.padding(8.dp)) {
-                            Text(
-                                "Colony Size",
-                                fontWeight = FontWeight.Bold,
-                                modifier = Modifier
-                                    .padding(start = 8.dp)
-                            )
-                            Slider(
-                                value = areaThreshold,
-                                onValueChange = { areaThreshold = it },
-                                valueRange = 0f..100f
-                            )
-
-                        }
+                        ColonySizeSlider(colonySize) {colonySize = it}
                     }
                 }
             }
 
             AppState.RESULT_COMPUTED -> {}
         }
+    }
+}
+
+@Composable
+fun ColonySizeSlider(colonySize: Float, onValueChange: (Float) -> Unit) {
+    Column(modifier = Modifier.padding(8.dp)) {
+        Text(
+            "Colony Size",
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .padding(start = 8.dp)
+        )
+        Slider(
+            value = colonySize,
+            onValueChange = onValueChange,
+            valueRange = 0f..100f
+        )
+
+    }
+}
+
+@Composable
+fun ThresholdSlider(threshold: Float, onValueChange: (Float) -> Unit) {
+    Column(modifier = Modifier.padding(8.dp)) {
+        Text(
+            "Threshold",
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .padding(start = 8.dp)
+        )
+        Slider(
+            value = threshold,
+            onValueChange = onValueChange,
+            valueRange = 0f..255f
+        )
     }
 }
