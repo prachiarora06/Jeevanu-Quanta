@@ -1,5 +1,9 @@
 package com.prachiarora06.jeevanu_quanta
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -32,9 +36,27 @@ fun AppHome() {
     var appState by remember {
         mutableStateOf(AppState.IMAGE_NOT_SELECTED)
     }
+    var imgUri by remember {
+        mutableStateOf<Uri?>(null)
+    }
+    val imgPicker = rememberLauncherForActivityResult(
+        ActivityResultContracts.PickVisualMedia()
+    ) { uri ->
+        if(uri != null) {
+            imgUri = uri
+            appState = AppState.IMAGE_SELECTED
+        }
+    }
+
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(onClick = { /*TODO*/ }) {
+            FloatingActionButton(onClick = {
+                imgPicker.launch(
+                    PickVisualMediaRequest(
+                        ActivityResultContracts.PickVisualMedia.ImageOnly
+                    )
+                )
+            }) {
                 Icon(
                     Icons.Filled.Add,
                     contentDescription = "Add Image Button"
@@ -78,7 +100,21 @@ fun AppHome() {
                 }
             }
 
-            AppState.IMAGE_SELECTED -> {}
+            AppState.IMAGE_SELECTED -> {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding)
+                ) {
+                    Text(
+                        "Image Selected",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 20.sp,
+                    )
+                }
+            }
             AppState.RESULT_COMPUTED -> {}
         }
     }
