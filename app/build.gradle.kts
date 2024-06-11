@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    id("com.chaquo.python")
 }
 
 android {
@@ -17,6 +18,10 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
+        }
+        ndk {
+            //noinspection ChromeOsAbiSupport
+            abiFilters += listOf("arm64-v8a", "armeabi-v7a", "x86")
         }
     }
 
@@ -45,6 +50,23 @@ android {
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        }
+    }
+}
+
+chaquopy {
+    defaultConfig {
+        pip {
+            install("opencv-python-headless")
+            install("numpy")
+            install("scipy")
+            install("scikit-image")
+            install("matplotlib")
+        }
+    }
+    sourceSets {
+        getByName("main") {
+            srcDir("src/main/python")
         }
     }
 }
