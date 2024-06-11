@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.ui.Modifier
@@ -21,7 +20,7 @@ import androidx.compose.ui.Alignment
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AboutPage() {
+fun HelpPage() {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -30,7 +29,7 @@ fun AboutPage() {
                     titleContentColor = MaterialTheme.colorScheme.primary,
                 ),
                 title = {
-                    Text("About")
+                    Text("Help")
                 },
                 navigationIcon = {
                     IconButton(onClick = { /*TODO*/ }) {
@@ -50,7 +49,7 @@ fun AboutPage() {
                 .padding(innerPadding)
                 .fillMaxSize()
         ) {
-            Text("About Page")
+            Text("Help Page")
         }
     }
 }

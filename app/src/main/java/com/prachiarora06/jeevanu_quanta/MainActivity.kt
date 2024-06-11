@@ -34,6 +34,9 @@ class MainActivity : ComponentActivity() {
                     composable("AboutPage") {
                         AboutPage()
                     }
+                    composable("HelpPage") {
+                        HelpPage()
+                    }
                 }
             }
         }

@@ -134,7 +134,10 @@ fun AppHome(navController: NavController) {
                     text = {
                         Text("Help")
                     },
-                    onClick = { /*TODO*/ }
+                    onClick = {
+                        navController.navigate("HelpPage")
+                        expanded = !expanded
+                    }
                 )
 
             }
