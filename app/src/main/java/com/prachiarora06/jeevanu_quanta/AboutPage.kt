@@ -29,7 +29,7 @@ fun AboutPage() {
                     titleContentColor = MaterialTheme.colorScheme.primary,
                 ),
                 title = {
-                    Text("Jeevanu Quanta")
+                    Text("About")
                 },
                 actions = {
                     IconButton(onClick = { /*TODO*/ }) {

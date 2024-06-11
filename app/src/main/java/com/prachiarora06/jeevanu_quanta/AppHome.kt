@@ -39,11 +39,12 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppHome() {
+fun AppHome(navController: NavController) {
     var appState by remember {
         mutableStateOf(AppState.IMAGE_NOT_SELECTED)
     }
@@ -90,7 +91,9 @@ fun AppHome() {
                     Text("Jeevanu Quanta")
                 },
                 actions = {
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = {
+                        navController.navigate("AboutPage")
+                    }) {
                         Icon(
                             Icons.Filled.MoreVert,
                             contentDescription = "Menu"
