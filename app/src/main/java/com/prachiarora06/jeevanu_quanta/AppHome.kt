@@ -5,16 +5,20 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -65,6 +69,9 @@ fun AppHome(navController: NavController) {
     var colonySize by remember {
         mutableFloatStateOf(20f)
     }
+    var expanded by remember {
+        mutableStateOf(false)
+    }
 
     Scaffold(
         floatingActionButton = {
@@ -92,7 +99,7 @@ fun AppHome(navController: NavController) {
                 },
                 actions = {
                     IconButton(onClick = {
-                        navController.navigate("AboutPage")
+                        expanded = !expanded
                     }) {
                         Icon(
                             Icons.Filled.MoreVert,
@@ -103,6 +110,35 @@ fun AppHome(navController: NavController) {
         },
         modifier = Modifier.fillMaxSize()
     ) { innerPadding ->
+        Box(
+            modifier = Modifier
+                .padding(8.dp)
+                .fillMaxSize()
+                .wrapContentSize(Alignment.TopEnd)
+        ) {
+            DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = !expanded },
+                modifier = Modifier
+            ) {
+                DropdownMenuItem(
+                    text = {
+                        Text("About")
+                    },
+                    onClick = {
+                        navController.navigate("AboutPage")
+                        expanded = !expanded
+                    }
+                )
+                DropdownMenuItem(
+                    text = {
+                        Text("Help")
+                    },
+                    onClick = { /*TODO*/ }
+                )
+
+            }
+        }
         when (appState) {
             AppState.IMAGE_NOT_SELECTED -> {
                 Column(
