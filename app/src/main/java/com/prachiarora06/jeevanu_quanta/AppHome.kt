@@ -101,6 +101,13 @@ fun AppHome(colCount: PyObject, contentResolver: ContentResolver, navController:
         )
         appState = AppState.RESULT_COMPUTED
     }
+    val SlidersAndButtons = @Composable {
+        Column {
+            ThresholdSlider(threshold) { threshold = it }
+            ColonySizeSlider(colonySize) { colonySize = it }
+            CountButton(computeResult)
+        }
+    }
 
     Scaffold(
         floatingActionButton = {
@@ -206,13 +213,7 @@ fun AppHome(colCount: PyObject, contentResolver: ContentResolver, navController:
                         )
                     }
                     item {
-                        ThresholdSlider(threshold) { threshold = it }
-                    }
-                    item {
-                        ColonySizeSlider(colonySize) { colonySize = it }
-                    }
-                    item {
-                        CountButton(computeResult)
+                        SlidersAndButtons()
                     }
                 }
             }
@@ -237,7 +238,6 @@ fun AppHome(colCount: PyObject, contentResolver: ContentResolver, navController:
                     item {
                         Text(
                             "$numOfColonies",
-                            modifier = Modifier.padding(innerPadding)
                         )
                     }
                 }
