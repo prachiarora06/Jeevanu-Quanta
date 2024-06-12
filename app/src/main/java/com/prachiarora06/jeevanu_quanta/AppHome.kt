@@ -103,9 +103,9 @@ fun AppHome(colCount: PyObject, contentResolver: ContentResolver, navController:
     }
     val SlidersAndButtons = @Composable {
         Column {
+            CountButton(computeResult)
             ThresholdSlider(threshold) { threshold = it }
             ColonySizeSlider(colonySize) { colonySize = it }
-            CountButton(computeResult)
         }
     }
 
@@ -234,6 +234,9 @@ fun AppHome(colCount: PyObject, contentResolver: ContentResolver, navController:
                                 .padding(28.dp)
                                 .clip(RoundedCornerShape(28.dp))
                         )
+                    }
+                    item {
+                        SlidersAndButtons()
                     }
                     item {
                         Text(
