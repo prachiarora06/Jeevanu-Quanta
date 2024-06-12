@@ -1,6 +1,8 @@
 package com.prachiarora06.jeevanu_quanta
 
 import android.content.ContentResolver
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
@@ -78,6 +80,9 @@ fun AppHome(colCount: PyObject, contentResolver: ContentResolver, navController:
     var expanded by remember {
         mutableStateOf(false)
     }
+    var resultBitmap by remember {
+        mutableStateOf<Bitmap?>(null)
+    }
     val computeResult = {
         val result = colCount.callAttr(
             "colCount",
@@ -88,6 +93,12 @@ fun AppHome(colCount: PyObject, contentResolver: ContentResolver, navController:
             colonySize.toInt()
         )
         numOfColonies = result.asList()[1].toInt()
+        val resultImage = result.asList()[0].toJava(ByteArray::class.java)
+        resultBitmap = BitmapFactory.decodeByteArray(
+            resultImage,
+            0,
+            resultImage.size
+        )
         appState = AppState.RESULT_COMPUTED
     }
 
@@ -207,10 +218,29 @@ fun AppHome(colCount: PyObject, contentResolver: ContentResolver, navController:
             }
 
             AppState.RESULT_COMPUTED -> {
-                Text(
-                    "$numOfColonies",
-                    modifier = Modifier.padding(innerPadding)
-                )
+                LazyColumn(
+                    modifier = Modifier
+                        .padding(innerPadding)
+                        .fillMaxSize()
+                ) {
+                    item {
+                        AsyncImage(
+                            model = resultBitmap,
+                            contentDescription = "Result Image",
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(28.dp)
+                                .clip(RoundedCornerShape(28.dp))
+                        )
+                    }
+                    item {
+                        Text(
+                            "$numOfColonies",
+                            modifier = Modifier.padding(innerPadding)
+                        )
+                    }
+                }
             }
         }
     }
