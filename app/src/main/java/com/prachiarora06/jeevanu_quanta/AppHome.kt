@@ -1,5 +1,6 @@
 package com.prachiarora06.jeevanu_quanta
 
+import android.content.ContentResolver
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
@@ -45,10 +46,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import com.chaquo.python.PyObject
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppHome(navController: NavController) {
+fun AppHome(colCount: PyObject, contentResolver: ContentResolver, navController: NavController) {
     var appState by remember {
         mutableStateOf(AppState.IMAGE_NOT_SELECTED)
     }
@@ -65,6 +67,9 @@ fun AppHome(navController: NavController) {
     }
     var threshold by remember {
         mutableFloatStateOf(185f)
+    }
+    var numOfColonies by remember {
+        mutableStateOf(0)
     }
     var colonySize by remember {
         mutableFloatStateOf(20f)
@@ -177,25 +182,46 @@ fun AppHome(navController: NavController) {
                         )
                     }
                     item {
-                        ThresholdSlider(threshold) {threshold = it}
+                        ThresholdSlider(threshold) { threshold = it }
                     }
                     item {
-                        ColonySizeSlider(colonySize) {colonySize = it}
+                        ColonySizeSlider(colonySize) { colonySize = it }
                     }
                     item {
-                        Row(
-                            horizontalArrangement = Arrangement.Center,
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            ElevatedButton(onClick = { /*TODO*/ }) {
-                                Text("Count")
-                            }
+                        CountButton {
+                            val result = colCount.callAttr(
+                                "colCount",
+                                contentResolver.openInputStream(imgUri!!)?.use {
+                                    it.readBytes()
+                                },
+                                threshold.toInt(),
+                                colonySize.toInt()
+                            )
+                            numOfColonies = result.asList()[1].toInt()
+                            appState = AppState.RESULT_COMPUTED
                         }
                     }
                 }
             }
 
-            AppState.RESULT_COMPUTED -> {}
+            AppState.RESULT_COMPUTED -> {
+                Text(
+                    "${numOfColonies}",
+                    modifier = Modifier.padding(innerPadding)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun CountButton(computeResult: () -> Unit) {
+    Row(
+        horizontalArrangement = Arrangement.Center,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        ElevatedButton(onClick = computeResult) {
+            Text("Count")
         }
     }
 }

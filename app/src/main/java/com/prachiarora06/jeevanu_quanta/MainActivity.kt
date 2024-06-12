@@ -29,7 +29,7 @@ class MainActivity : ComponentActivity() {
                     navController = navController,
                     startDestination = "AppHome") {
                     composable("AppHome") {
-                        AppHome(navController)
+                        AppHome(colCount, contentResolver, navController)
                     }
                     composable("AboutPage") {
                         AboutPage(navController)
