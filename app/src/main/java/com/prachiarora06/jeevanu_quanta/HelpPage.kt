@@ -17,10 +17,11 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.ui.Modifier
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.navigation.NavController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HelpPage() {
+fun HelpPage(navController: NavController) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -32,7 +33,9 @@ fun HelpPage() {
                     Text("Help")
                 },
                 navigationIcon = {
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = {
+                        navController.popBackStack()
+                    }) {
                         Icon(
                             Icons.Filled.ArrowBack,
                             contentDescription = "Go Back"

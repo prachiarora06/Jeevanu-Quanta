@@ -32,10 +32,10 @@ class MainActivity : ComponentActivity() {
                         AppHome(navController)
                     }
                     composable("AboutPage") {
-                        AboutPage()
+                        AboutPage(navController)
                     }
                     composable("HelpPage") {
-                        HelpPage()
+                        HelpPage(navController)
                     }
                 }
             }
