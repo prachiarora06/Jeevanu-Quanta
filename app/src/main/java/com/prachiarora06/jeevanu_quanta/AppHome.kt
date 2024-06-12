@@ -34,6 +34,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -69,13 +70,25 @@ fun AppHome(colCount: PyObject, contentResolver: ContentResolver, navController:
         mutableFloatStateOf(185f)
     }
     var numOfColonies by remember {
-        mutableStateOf(0)
+        mutableIntStateOf(0)
     }
     var colonySize by remember {
         mutableFloatStateOf(20f)
     }
     var expanded by remember {
         mutableStateOf(false)
+    }
+    val computeResult = {
+        val result = colCount.callAttr(
+            "colCount",
+            contentResolver.openInputStream(imgUri!!)?.use {
+                it.readBytes()
+            },
+            threshold.toInt(),
+            colonySize.toInt()
+        )
+        numOfColonies = result.asList()[1].toInt()
+        appState = AppState.RESULT_COMPUTED
     }
 
     Scaffold(
@@ -188,25 +201,14 @@ fun AppHome(colCount: PyObject, contentResolver: ContentResolver, navController:
                         ColonySizeSlider(colonySize) { colonySize = it }
                     }
                     item {
-                        CountButton {
-                            val result = colCount.callAttr(
-                                "colCount",
-                                contentResolver.openInputStream(imgUri!!)?.use {
-                                    it.readBytes()
-                                },
-                                threshold.toInt(),
-                                colonySize.toInt()
-                            )
-                            numOfColonies = result.asList()[1].toInt()
-                            appState = AppState.RESULT_COMPUTED
-                        }
+                        CountButton(computeResult)
                     }
                 }
             }
 
             AppState.RESULT_COMPUTED -> {
                 Text(
-                    "${numOfColonies}",
+                    "$numOfColonies",
                     modifier = Modifier.padding(innerPadding)
                 )
             }
