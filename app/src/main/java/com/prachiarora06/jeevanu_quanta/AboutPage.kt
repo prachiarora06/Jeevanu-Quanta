@@ -35,7 +35,7 @@ fun AboutPage(navController: NavController) {
                 },
                 navigationIcon = {
                     IconButton(onClick = {
-                        navController.popBackStack()
+                        navController.navigateUp()
                     }) {
                         Icon(
                             Icons.Filled.ArrowBack,
