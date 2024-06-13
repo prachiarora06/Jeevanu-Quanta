@@ -39,6 +39,7 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -50,6 +51,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.chaquo.python.PyObject
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -83,25 +86,28 @@ fun AppHome(colCount: PyObject, contentResolver: ContentResolver, navController:
     var resultBitmap by remember {
         mutableStateOf<Bitmap?>(null)
     }
-    val computeResult = {
-        val result = colCount.callAttr(
-            "colCount",
-            contentResolver.openInputStream(imgUri!!)?.use {
-                it.readBytes()
-            },
-            threshold.toInt(),
-            colonySize.toInt()
-        )
-        numOfColonies = result.asList()[1].toInt()
-        val resultImage = result.asList()[0].toJava(ByteArray::class.java)
-        resultBitmap = BitmapFactory.decodeByteArray(
-            resultImage,
-            0,
-            resultImage.size
-        )
-        appState = AppState.RESULT_COMPUTED
+    val scope = rememberCoroutineScope()
+    val computeResult: () -> Unit = {
+        scope.launch(Dispatchers.Default) {
+            val result = colCount.callAttr(
+                "colCount",
+                contentResolver.openInputStream(imgUri!!)?.use {
+                    it.readBytes()
+                },
+                threshold.toInt(),
+                colonySize.toInt()
+            )
+            numOfColonies = result.asList()[1].toInt()
+            val resultImage = result.asList()[0].toJava(ByteArray::class.java)
+            resultBitmap = BitmapFactory.decodeByteArray(
+                resultImage,
+                0,
+                resultImage.size
+            )
+            appState = AppState.RESULT_COMPUTED
+        }
     }
-    val SlidersAndButtons = @Composable {
+    val slidersAndButtons = @Composable {
         Column {
             CountButton(computeResult)
             ThresholdSlider(threshold) { threshold = it }
@@ -213,7 +219,7 @@ fun AppHome(colCount: PyObject, contentResolver: ContentResolver, navController:
                         )
                     }
                     item {
-                        SlidersAndButtons()
+                        slidersAndButtons()
                     }
                 }
             }
@@ -236,7 +242,7 @@ fun AppHome(colCount: PyObject, contentResolver: ContentResolver, navController:
                         )
                     }
                     item {
-                        SlidersAndButtons()
+                        slidersAndButtons()
                     }
                     item {
                         Text(
