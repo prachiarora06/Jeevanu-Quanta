@@ -27,6 +27,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
@@ -86,8 +87,12 @@ fun AppHome(colCount: PyObject, contentResolver: ContentResolver, navController:
     var resultBitmap by remember {
         mutableStateOf<Bitmap?>(null)
     }
+    var processingResult by remember {
+        mutableStateOf(false)
+    }
     val scope = rememberCoroutineScope()
     val computeResult: () -> Unit = {
+        processingResult = true
         scope.launch(Dispatchers.Default) {
             val result = colCount.callAttr(
                 "colCount",
@@ -105,11 +110,20 @@ fun AppHome(colCount: PyObject, contentResolver: ContentResolver, navController:
                 resultImage.size
             )
             appState = AppState.RESULT_COMPUTED
+            processingResult = false
         }
     }
     val slidersAndButtons = @Composable {
         Column {
-            CountButton(computeResult)
+            if (processingResult) {
+                LinearProgressIndicator(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                )
+            } else {
+                CountButton(computeResult)
+            }
             ThresholdSlider(threshold) { threshold = it }
             ColonySizeSlider(colonySize) { colonySize = it }
         }
