@@ -95,6 +95,9 @@ fun AppHome(colCount: PyObject, contentResolver: ContentResolver, navController:
     var processingResult by remember {
         mutableStateOf(false)
     }
+    var quadrantCount by remember {
+        mutableStateOf(arrayOf(0))
+    }
     val scope = rememberCoroutineScope()
     val computeResult: () -> Unit = {
         processingResult = true
@@ -107,15 +110,17 @@ fun AppHome(colCount: PyObject, contentResolver: ContentResolver, navController:
                 threshold.toInt(),
                 colonySize.toInt()
             )
-            numOfColonies = result.asList()[1].toInt()
-            val resultImage = result.asList()[0].toJava(ByteArray::class.java)
+            val resultList = result.asList()
+            val resultImage = resultList[0].toJava(ByteArray::class.java)
             resultBitmap = BitmapFactory.decodeByteArray(
                 resultImage,
                 0,
                 resultImage.size
             )
-            appState = AppState.RESULT_COMPUTED
+            numOfColonies = resultList[1].toInt()
+            quadrantCount = resultList[2].asList().map { it.toInt() }.toTypedArray()
             processingResult = false
+            appState = AppState.RESULT_COMPUTED
         }
     }
     val slidersAndButtons = @Composable {
@@ -291,7 +296,7 @@ fun AppHome(colCount: PyObject, contentResolver: ContentResolver, navController:
                                     modifier = Modifier
                                         .padding(bottom = 12.dp)
                                 )
-                                QuadrandTable()
+                                QuadrantTable(quadrantCount)
                             }
                         }
                     }
@@ -349,7 +354,7 @@ fun ThresholdSlider(threshold: Float, onValueChange: (Float) -> Unit) {
 }
 
 @Composable
-fun QuadrandTable() {
+fun QuadrantTable(count: Array<Int>) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -378,7 +383,10 @@ fun QuadrandTable() {
                     .border(.5.dp, MaterialTheme.colorScheme.secondary),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text("quadrant 2")
+                Text(
+                    "${count[1]}",
+                    fontWeight = FontWeight.Bold
+                )
             }
             Column(
                 modifier = Modifier
@@ -386,7 +394,10 @@ fun QuadrandTable() {
                     .border(.5.dp, MaterialTheme.colorScheme.secondary),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text("quadrant 1")
+                Text(
+                    "${count[0]}",
+                    fontWeight = FontWeight.Bold
+                )
             }
         }
         Row(
@@ -399,7 +410,10 @@ fun QuadrandTable() {
                     .border(.5.dp, MaterialTheme.colorScheme.secondary),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text("quadrant 3")
+                Text(
+                    "${count[2]}",
+                    fontWeight = FontWeight.Bold
+                )
             }
             Column(
                 modifier = Modifier
@@ -407,7 +421,10 @@ fun QuadrandTable() {
                     .border(.5.dp, MaterialTheme.colorScheme.secondary),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text("quadrant 4")
+                Text(
+                    "${count[3]}",
+                    fontWeight = FontWeight.Bold
+                )
             }
         }
     }
