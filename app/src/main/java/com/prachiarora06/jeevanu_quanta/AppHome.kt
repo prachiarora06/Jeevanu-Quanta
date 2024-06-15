@@ -7,6 +7,7 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -270,6 +271,7 @@ fun AppHome(colCount: PyObject, contentResolver: ContentResolver, navController:
                         ) {
                             Column(
                                 modifier = Modifier
+                                    .fillMaxWidth()
                                     .padding(16.dp)
                             ) {
                                 Text(
@@ -281,12 +283,15 @@ fun AppHome(colCount: PyObject, contentResolver: ContentResolver, navController:
                                 )
                                 Text(
                                     buildAnnotatedString {
-                                        append("Number of Colonies: ")
+                                        append("Total Number of colonies: ")
                                         withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
                                             append("$numOfColonies")
                                         }
                                     },
+                                    modifier = Modifier
+                                        .padding(bottom = 12.dp)
                                 )
+                                QuadrandTable()
                             }
                         }
                     }
@@ -340,5 +345,70 @@ fun ThresholdSlider(threshold: Float, onValueChange: (Float) -> Unit) {
             onValueChange = onValueChange,
             valueRange = 0f..255f
         )
+    }
+}
+
+@Composable
+fun QuadrandTable() {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(1.5.dp, MaterialTheme.colorScheme.secondary),
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+        ) {
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .border(.5.dp, MaterialTheme.colorScheme.secondary),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text("Number of colonies per quadrant")
+            }
+        }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+        ) {
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .border(.5.dp, MaterialTheme.colorScheme.secondary),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text("quadrant 2")
+            }
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .border(.5.dp, MaterialTheme.colorScheme.secondary),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text("quadrant 1")
+            }
+        }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+        ) {
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .border(.5.dp, MaterialTheme.colorScheme.secondary),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text("quadrant 3")
+            }
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .border(.5.dp, MaterialTheme.colorScheme.secondary),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text("quadrant 4")
+            }
+        }
     }
 }
