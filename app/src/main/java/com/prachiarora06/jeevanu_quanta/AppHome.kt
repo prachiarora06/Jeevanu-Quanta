@@ -74,7 +74,7 @@ fun AppHome(colCount: PyObject, contentResolver: ContentResolver, navController:
     ) { uri ->
         if (uri != null) {
             imgUri = uri
-            appState = AppState.IMAGE_SELECTED
+            appState = AppState.CROP_IMAGE
         }
     }
     var threshold by remember {
@@ -222,6 +222,38 @@ fun AppHome(colCount: PyObject, contentResolver: ContentResolver, navController:
                         fontWeight = FontWeight.Bold,
                         fontSize = 20.sp,
                     )
+                }
+            }
+
+            AppState.CROP_IMAGE -> {
+                Column(
+                    verticalArrangement = Arrangement.Center,
+                    modifier = Modifier
+                        .fillMaxSize()
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    ) {
+                        AsyncImage(
+                            model = imgUri,
+                            contentDescription = "Selected Image",
+                            modifier = Modifier
+                                .fillMaxWidth()
+                        )
+                    }
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
+                    ) {
+                        ElevatedButton(
+                            onClick = {appState = AppState.IMAGE_SELECTED},
+                        ) {
+                            Text("Crop")
+                        }
+                    }
                 }
             }
 
