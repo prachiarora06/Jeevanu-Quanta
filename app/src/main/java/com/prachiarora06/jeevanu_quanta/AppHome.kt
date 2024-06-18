@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -48,9 +49,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -101,6 +103,12 @@ fun AppHome(colCount: PyObject, contentResolver: ContentResolver, navController:
     }
     var quadrantCount by remember {
         mutableStateOf(arrayOf(0))
+    }
+    var cropRect by remember {
+        mutableStateOf(Rect(10F, 10F, 100F, 100F))
+    }
+    var isDragging by remember {
+        mutableStateOf(false)
     }
     val scope = rememberCoroutineScope()
     val computeResult: () -> Unit = {
@@ -248,11 +256,27 @@ fun AppHome(colCount: PyObject, contentResolver: ContentResolver, navController:
                         Canvas(
                             modifier = Modifier
                                 .matchParentSize()
+                                .pointerInput(Unit) {
+                                    detectDragGestures(
+                                        onDragStart = {offset ->
+                                            if (cropRect.contains(offset)) {
+                                                isDragging = true
+                                            }
+                                        },
+                                        onDragEnd = {
+                                            isDragging = false
+                                        }
+                                    ) { _, dragAmount ->
+                                        if (isDragging) {
+                                            cropRect = cropRect.translate(dragAmount)
+                                        }
+                                    }
+                                }
                         ) {
                             drawRect(
                                 color = Color.White,
-                                size = size/2F,
-                                topLeft = Offset(20F, 20F),
+                                size = cropRect.size,
+                                topLeft = cropRect.topLeft,
                                 style = Stroke(width = 10F)
                             )
                         }
