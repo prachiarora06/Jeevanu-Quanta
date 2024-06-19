@@ -105,7 +105,7 @@ fun AppHome(colCount: PyObject, contentResolver: ContentResolver, navController:
         mutableStateOf(arrayOf(0))
     }
     var cropRect by remember {
-        mutableStateOf(Rect(10F, 10F, 100F, 100F))
+        mutableStateOf(Rect(10F, 10F, 400F, 300F))
     }
     var isDragging by remember {
         mutableStateOf(false)
@@ -277,7 +277,27 @@ fun AppHome(colCount: PyObject, contentResolver: ContentResolver, navController:
                                 color = Color.White,
                                 size = cropRect.size,
                                 topLeft = cropRect.topLeft,
-                                style = Stroke(width = 10F)
+                                style = Stroke(width = 4F)
+                            )
+                            drawCircle(
+                                color = Color.White,
+                                center = cropRect.topLeft,
+                                radius = 10F,
+                            )
+                            drawCircle(
+                                color = Color.White,
+                                center = cropRect.topRight,
+                                radius = 10F,
+                            )
+                            drawCircle(
+                                color = Color.White,
+                                center = cropRect.bottomLeft,
+                                radius = 10F,
+                            )
+                            drawCircle(
+                                color = Color.White,
+                                center = cropRect.bottomRight,
+                                radius = 10F,
                             )
                         }
                     }
