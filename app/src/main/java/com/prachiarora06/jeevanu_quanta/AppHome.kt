@@ -299,6 +299,12 @@ fun AppHome(colCount: PyObject, contentResolver: ContentResolver, navController:
                                 center = cropRect.bottomRight,
                                 radius = 10F,
                             )
+                            drawOval(
+                                color = Color.White,
+                                size = cropRect.size,
+                                topLeft = cropRect.topLeft,
+                                style = Stroke(width = 4F)
+                            )
                         }
                     }
                     Row(
