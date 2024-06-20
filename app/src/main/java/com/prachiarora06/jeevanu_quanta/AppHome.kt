@@ -107,8 +107,8 @@ fun AppHome(colCount: PyObject, contentResolver: ContentResolver, navController:
     var cropRect by remember {
         mutableStateOf(Rect(10F, 10F, 400F, 300F))
     }
-    var isDragging by remember {
-        mutableStateOf(false)
+    var draggedAt by remember {
+        mutableStateOf<OverlayDraggedAt?>(null)
     }
     val scope = rememberCoroutineScope()
     val computeResult: () -> Unit = {
@@ -259,16 +259,15 @@ fun AppHome(colCount: PyObject, contentResolver: ContentResolver, navController:
                                 .pointerInput(Unit) {
                                     detectDragGestures(
                                         onDragStart = {offset ->
-                                            if (cropRect.contains(offset)) {
-                                                isDragging = true
-                                            }
+                                            draggedAt = detectDraggedAt(offset, cropRect, 24F)
                                         },
                                         onDragEnd = {
-                                            isDragging = false
+                                            draggedAt = null
                                         }
                                     ) { _, dragAmount ->
-                                        if (isDragging) {
-                                            cropRect = cropRect.translate(dragAmount)
+                                        if (draggedAt != null) {
+                                            cropRect =
+                                                transformOverlay(dragAmount, cropRect, draggedAt!!)
                                         }
                                     }
                                 }
