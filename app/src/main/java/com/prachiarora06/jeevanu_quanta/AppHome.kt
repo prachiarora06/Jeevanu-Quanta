@@ -49,17 +49,20 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.toSize
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.chaquo.python.PyObject
@@ -106,6 +109,9 @@ fun AppHome(colCount: PyObject, contentResolver: ContentResolver, navController:
     }
     var cropRect by remember {
         mutableStateOf(Rect(10F, 10F, 400F, 300F))
+    }
+    var canvasRect by remember {
+        mutableStateOf(Rect.Zero)
     }
     var draggedAt by remember {
         mutableStateOf<OverlayDraggedAt?>(null)
@@ -256,6 +262,8 @@ fun AppHome(colCount: PyObject, contentResolver: ContentResolver, navController:
                         Canvas(
                             modifier = Modifier
                                 .matchParentSize()
+                                .onSizeChanged { size ->
+                                    canvasRect =  Rect(Offset.Zero, size.toSize())}
                                 .pointerInput(Unit) {
                                     detectDragGestures(
                                         onDragStart = {offset ->
@@ -267,7 +275,7 @@ fun AppHome(colCount: PyObject, contentResolver: ContentResolver, navController:
                                     ) { _, dragAmount ->
                                         if (draggedAt != null) {
                                             cropRect =
-                                                transformOverlay(dragAmount, cropRect, draggedAt!!)
+                                                transformOverlay(dragAmount, cropRect, canvasRect, draggedAt!!)
                                         }
                                     }
                                 }

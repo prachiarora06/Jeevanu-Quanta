@@ -22,8 +22,8 @@ fun detectDraggedAt(offset: Offset, rect: Rect, vertexSize: Float): OverlayDragg
     }
 }
 
-fun transformOverlay(offset: Offset, rect: Rect, draggedAt: OverlayDraggedAt): Rect {
-    return when (draggedAt) {
+fun transformOverlay(offset: Offset, rect: Rect, canvasRect: Rect, draggedAt: OverlayDraggedAt): Rect {
+    var newRect = when (draggedAt) {
         OverlayDraggedAt.TOPLEFT -> Rect(
             rect.left + offset.x,
             rect.top + offset.y,
@@ -59,4 +59,26 @@ fun transformOverlay(offset: Offset, rect: Rect, draggedAt: OverlayDraggedAt): R
             rect.bottom + offset.y
         )
     }
+
+    newRect = when {
+        newRect.left < canvasRect.left -> newRect.translate(
+            canvasRect.left - newRect.left,
+            0f
+        )
+        newRect.right > canvasRect.right -> newRect.translate(
+            canvasRect.right - newRect.right,
+            0f
+        )
+        newRect.top < canvasRect.top -> newRect.translate(
+            0f,
+            canvasRect.top - newRect.top
+        )
+        newRect.bottom > canvasRect.bottom -> newRect.translate(
+            0f,
+            canvasRect.bottom - newRect.bottom
+        )
+        else -> newRect
+    }
+
+    return newRect
 }
