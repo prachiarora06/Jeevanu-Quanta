@@ -267,7 +267,7 @@ fun AppHome(colCount: PyObject, contentResolver: ContentResolver, navController:
                                 .pointerInput(Unit) {
                                     detectDragGestures(
                                         onDragStart = {offset ->
-                                            draggedAt = detectDraggedAt(offset, cropRect, 24F)
+                                            draggedAt = detectDraggedAt(offset, cropRect, 48F)
                                         },
                                         onDragEnd = {
                                             draggedAt = null
@@ -275,7 +275,7 @@ fun AppHome(colCount: PyObject, contentResolver: ContentResolver, navController:
                                     ) { _, dragAmount ->
                                         if (draggedAt != null) {
                                             cropRect =
-                                                transformOverlay(dragAmount, cropRect, canvasRect, draggedAt!!)
+                                                transformOverlay(dragAmount, cropRect, canvasRect, draggedAt!!, 48F)
                                         }
                                     }
                                 }

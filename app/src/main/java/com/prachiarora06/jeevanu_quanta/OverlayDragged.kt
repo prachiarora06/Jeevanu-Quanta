@@ -27,34 +27,47 @@ fun transformOverlay(
     rect: Rect,
     canvasRect: Rect,
     draggedAt: OverlayDraggedAt,
+    minimumSize: Float,
 ): Rect {
+    fun Float.adjustLeft(minimumVertexDistance: Float) =
+        coerceAtLeast(canvasRect.left).coerceAtMost(rect.right - minimumVertexDistance)
+
+    fun Float.adjustTop(minimumVertexDistance: Float) =
+        coerceAtLeast(canvasRect.top).coerceAtMost(rect.bottom - minimumVertexDistance)
+
+    fun Float.adjustRight(minimumVertexDistance: Float) =
+        coerceAtMost(canvasRect.right).coerceAtLeast(rect.left + minimumVertexDistance)
+
+    fun Float.adjustBottom(minimumVertexDistance: Float) =
+        coerceAtMost(canvasRect.bottom).coerceAtLeast(rect.top + minimumVertexDistance)
+
     var newRect = when (draggedAt) {
         OverlayDraggedAt.TOPLEFT -> Rect(
-            rect.left + offset.x,
-            rect.top + offset.y,
+            (rect.left + offset.x).adjustLeft(minimumSize),
+            (rect.top + offset.y).adjustTop(minimumSize),
             rect.right,
             rect.bottom
         )
 
         OverlayDraggedAt.TOPRIGHT -> Rect(
             rect.left,
-            rect.top + offset.y,
-            rect.right + offset.x,
+            (rect.top + offset.y).adjustTop(minimumSize),
+            (rect.right + offset.x).adjustRight(minimumSize),
             rect.bottom
         )
 
         OverlayDraggedAt.BOTTOMLEFT -> Rect(
-            rect.left + offset.x,
+            (rect.left + offset.x).adjustLeft(minimumSize),
             rect.top,
             rect.right,
-            rect.bottom + offset.y
+            (rect.bottom + offset.y).adjustBottom(minimumSize)
         )
 
         OverlayDraggedAt.BOTTOMRIGHT -> Rect(
             rect.left,
             rect.top,
-            rect.right + offset.x,
-            rect.bottom + offset.y
+            (rect.right + offset.x).adjustRight(minimumSize),
+            (rect.bottom + offset.y).adjustBottom(minimumSize)
         )
 
         OverlayDraggedAt.INSIDE -> Rect(
