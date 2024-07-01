@@ -17,10 +17,10 @@ class Rect:
 
 def colCount(inputImage, canvasRect, cropRect, thresholdValue, areaThreshold):
     img = cv2.imdecode(np.asarray(inputImage), cv2.IMREAD_COLOR)
-    sizey = img.shape[0]
-    sizex = img.shape[1]
+    height = img.shape[0]
+    width = img.shape[1]
 
-    scale =  (sizex/2) / canvasRect[2]
+    scale =  (width/2) / canvasRect[2]
     cropRect = Rect(
         cropRect[0] * scale,
         cropRect[1] * scale,
@@ -68,10 +68,10 @@ def colCount(inputImage, canvasRect, cropRect, thresholdValue, areaThreshold):
     props = [p for p in props if p['area']>areaThreshold]
     #checking in which quad does the seg lies in
     quadCount = []
-    quadCount.append(len([p for p in props if p['centroid'][0]<=sizex/2 and p['centroid'][1]>sizey/2]))
-    quadCount.append(len([p for p in props if p['centroid'][0]<=sizex/2 and p['centroid'][1]<=sizey/2]))
-    quadCount.append(len([p for p in props if p['centroid'][0]>sizex/2 and p['centroid'][1]<=sizey/2]))
-    quadCount.append(len([p for p in props if p['centroid'][0]>sizex/2 and p['centroid'][1]>sizey/2]))
+    quadCount.append(len([p for p in props if p['centroid'][0]<=width/2 and p['centroid'][1]>height/2]))
+    quadCount.append(len([p for p in props if p['centroid'][0]<=width/2 and p['centroid'][1]<=height/2]))
+    quadCount.append(len([p for p in props if p['centroid'][0]>width/2 and p['centroid'][1]<=height/2]))
+    quadCount.append(len([p for p in props if p['centroid'][0]>width/2 and p['centroid'][1]>height/2]))
 
     f = io.BytesIO()
     im = Image.fromarray((result * 255).astype(np.uint8))
