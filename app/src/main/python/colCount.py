@@ -8,10 +8,38 @@ from skimage.measure import regionprops
 from skimage.morphology import remove_small_objects
 from PIL import Image
 
-def colCount(inputImage, thresholdValue, areaThreshold):
+class Rect:
+    def __init__(self, x, y, w, h):
+        self.x = int(x)
+        self.y = int(y)
+        self.w = int(w)
+        self.h = int(h)
+
+def colCount(inputImage, canvasRect, cropRect, thresholdValue, areaThreshold):
     img = cv2.imdecode(np.asarray(inputImage), cv2.IMREAD_COLOR)
     sizey = img.shape[0]
     sizex = img.shape[1]
+
+    scale =  (sizex/2) / canvasRect[2]
+    cropRect = Rect(
+        cropRect[0] * scale,
+        cropRect[1] * scale,
+        cropRect[2] * scale,
+        cropRect[3] * scale
+    )
+    mask = np.zeros(img.shape[:2], dtype=np.uint8)
+    cv2.ellipse(
+        img = mask,
+        center = (cropRect.x, cropRect.y),
+        axes = (cropRect.w, cropRect.h),
+        angle = 0,
+        startAngle = 0,
+        endAngle = 360,
+        color = (255, 255, 255),
+        thickness = -1
+    )
+    img = cv2.bitwise_and(img, img, mask=mask)
+
     image = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     thresh, output_binthresh = cv2.threshold(image, thresholdValue, 254, cv2.THRESH_BINARY)
     kernel = np.ones((3),np.uint8)

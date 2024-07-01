@@ -125,6 +125,18 @@ fun AppHome(colCount: PyObject, contentResolver: ContentResolver, navController:
                 contentResolver.openInputStream(imgUri!!)?.use {
                     it.readBytes()
                 },
+                arrayOf(
+                    canvasRect.center.x,
+                    canvasRect.center.y,
+                    canvasRect.width / 2,
+                    canvasRect.height / 2,
+                ),
+                arrayOf(
+                    cropRect.center.x,
+                    cropRect.center.y,
+                    cropRect.width / 2,
+                    cropRect.height / 2,
+                ),
                 threshold.toInt(),
                 colonySize.toInt()
             )
