@@ -16,7 +16,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        if(!Python.isStarted()) {
+        if (!Python.isStarted()) {
             Python.start(AndroidPlatform(this))
         }
         val py = Python.getInstance()
@@ -27,7 +27,8 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 NavHost(
                     navController = navController,
-                    startDestination = "AppHome") {
+                    startDestination = "AppHome"
+                ) {
                     composable("AppHome") {
                         AppHome(colCount, contentResolver, navController)
                     }

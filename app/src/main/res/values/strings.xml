@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Jeevanu-Quanta</string>
+    <string name="about_app">This is Jeevanu Quanta. An Android app that simplifies bacterial colony counting using advanced computer vision algorithms. With a user-friendly interface powered by Jetpack Compose and Python scripts executed via Chaquopy, this tool allows researchers to easily select images from their gallery and get accurate colony counts. This app is tested with manually counted datasets ensuring precise results. The app runs entirely on-device without internet access. Our app empowers scientists to focus on their studies while while making counting colonies much easier and quicker.</string>
 </resources>
