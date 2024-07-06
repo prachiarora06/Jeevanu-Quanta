@@ -66,12 +66,11 @@ def colCount(inputImage, canvasRect, cropRect, thresholdValue, areaThreshold):
     result = color.label2rgb(labels, bg_label=0)
     props = regionprops(labels)
     props = [p for p in props if p['area']>areaThreshold]
-    #checking in which quad does the seg lies in
     quadCount = []
-    quadCount.append(len([p for p in props if p['centroid'][0]<=width/2 and p['centroid'][1]>height/2]))
-    quadCount.append(len([p for p in props if p['centroid'][0]<=width/2 and p['centroid'][1]<=height/2]))
-    quadCount.append(len([p for p in props if p['centroid'][0]>width/2 and p['centroid'][1]<=height/2]))
-    quadCount.append(len([p for p in props if p['centroid'][0]>width/2 and p['centroid'][1]>height/2]))
+    quadCount.append(len([p for p in props if p['centroid'][0]<=cropRect.y and p['centroid'][1]>cropRect.x]))
+    quadCount.append(len([p for p in props if p['centroid'][0]<=cropRect.y and p['centroid'][1]<=cropRect.x]))
+    quadCount.append(len([p for p in props if p['centroid'][0]>cropRect.y and p['centroid'][1]<=cropRect.x]))
+    quadCount.append(len([p for p in props if p['centroid'][0]>cropRect.y and p['centroid'][1]>cropRect.x]))
 
     f = io.BytesIO()
     im = Image.fromarray((result * 255).astype(np.uint8))
