@@ -19,6 +19,13 @@ def colCount(inputImage, canvasRect, cropRect, thresholdValue, areaThreshold):
     img = cv2.imdecode(np.asarray(inputImage), cv2.IMREAD_COLOR)
     height = img.shape[0]
     width = img.shape[1]
+    downSizeResolution = 700 #todo provide an option for this in UI
+    if width > downSizeResolution:
+        aspectRatio = width/height
+        newWidth = downSizeResolution
+        img = cv2.resize(img, (newWidth, int(newWidth*aspectRatio)), interpolation = cv2.INTER_AREA)
+        height = img.shape[0]
+        width = img.shape[1]
 
     scale =  (width/2) / canvasRect[2]
     cropRect = Rect(
